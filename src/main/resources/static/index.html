@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: right;
+}
+
+li a, .dropbtn {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 15px 40px;
+  text-decoration: none;
+}
+
+li a:hover {
+  background-color: #76bfda;
+}
+
+.active {
+  background-color: #76bfda;
+}
+
+#content {
+  padding: 20px;
+  margin-top: 20px;
+}
+.line {
+  margin-bottom: 10px; /* Add space between lines */
+  font-size: 18px; /* Customize font size */
+  color: #333; /* Customize color */
+}
+</style>
+</head>
+<body>
+
+<ul>
+  <li><a href="#Cart" onclick="clearContent(); setActiveTab(this); showCartContent()">Cart</a></li>
+  <li><a href="#Recipes" onclick="clearContent(); setActiveTab(this); showRecipesContent()">Recipes</a></li>
+  <li><a href="#Groups" onclick="clearContent(); setActiveTab(this); showGroupsContent()">Groups</a></li>
+  <li><a href="#Catalogue" onclick="clearContent(); setActiveTab(this); loadCatalogue()">Catalogue</a></li>
+  <li style="height:10px;width:200px"><a href="#textBox"><input type="text"></a></li>
+</ul>
+
+<div id="content">
+    <!-- Catalogue content will be loaded here -->
+</div>
+
+<script>
+function clearContent() {
+    // Clear the content area
+    document.getElementById('content').textContent = '';
+}
+
+function setActiveTab(element) {
+    // Remove active class from all tabs
+    document.querySelectorAll("ul li a").forEach(tab => tab.classList.remove("active"));
+    // Add active class to the clicked tab
+    element.classList.add("active");
+}
+
+function showCartContent() {
+    // Set content for the Cart tab
+    document.getElementById('content').textContent = 'Cart Content Here';
+}
+
+function showRecipesContent() {
+    // Set content for the Recipes tab
+    document.getElementById('content').textContent = 'Recipes Content Here';
+}
+
+function showGroupsContent() {
+    // Set content for the Groups tab
+    document.getElementById('content').textContent = 'Groups Content Here';
+}
+
+function loadCatalogue() {
+    // Fetch data for the Catalogue tab
+    fetch('http://localhost:8080/file-content')
+        .then(response => response.json())
+        .then(data => {
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = ''; // Clear any existing content
+
+            data.forEach((line, index) => {
+                // Create a new div for each line and style it
+                const lineDiv = document.createElement('div');
+                lineDiv.classList.add('line');
+                lineDiv.textContent = `Line ${index + 1}: ${line}`;
+                contentDiv.appendChild(lineDiv);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching file content:', error);
+            document.getElementById('content').textContent = 'Error loading catalogue content';
+        });
+}
+</script>
+</body>
+</html>
